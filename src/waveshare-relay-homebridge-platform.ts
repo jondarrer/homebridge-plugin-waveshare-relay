@@ -41,7 +41,12 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
       this.log.debug('Executing didFinishLaunching callback');
 
       // if (this.config.token) {
+      try {
         await this.discoverDevices();
+      } catch (error) {
+        // const err = error as Error;
+        this.log.error('Failed when running discoverDevices', { cause: error });
+      }
       // } else {
       //   this.log.info(
       //     'No token available, doing nothing. Hint: Configure the plugin by logging in. Then restart Homebridge to complete plugin activation.'
