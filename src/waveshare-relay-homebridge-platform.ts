@@ -23,30 +23,31 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
    * @param api
    */
   constructor(public log: ILogger, public config: IPlatformConfig, public api: IAPI) {
-      this.Service = this.api.hap.Service;
-      this.Characteristic = this.api.hap.Characteristic;
+    this.log.debug('Begin initializing platform:', this.config.name);
+    this.Service = this.api.hap.Service;
+    this.Characteristic = this.api.hap.Characteristic;
 
-      // Extract name from config
-      this.name = config.name;
+    // Extract name from config
+    this.name = config.name;
 
-      this.waveshareRelayApi = new WaveshareRelayApi('http://rpi4-2.local:3000');
-      this.log.debug('Finished initializing platform:', this.config.name);
-  
-      // When this event is fired it means Homebridge has restored all cached accessories from disk.
-      // Dynamic Platform plugins should only register new accessories after this event was fired,
-      // in order to ensure they weren't added to homebridge already. This event can also be used
-      // to start discovery of new accessories.
-      this.api.on('didFinishLaunching', async () => {
-        this.log.debug('Executing didFinishLaunching callback');
+    this.waveshareRelayApi = new WaveshareRelayApi('http://rpi4-2.local:3000');
+    this.log.debug('Finished initializing platform:', this.config.name);
 
-        if (this.config.token) {
-          await this.discoverDevices();
-        } else {
-          this.log.info(
-            'No token available, doing nothing. Hint: Configure the plugin by logging in. Then restart Homebridge to complete plugin activation.'
-          );
-        }
-      });
+    // When this event is fired it means Homebridge has restored all cached accessories from disk.
+    // Dynamic Platform plugins should only register new accessories after this event was fired,
+    // in order to ensure they weren't added to homebridge already. This event can also be used
+    // to start discovery of new accessories.
+    this.api.on('didFinishLaunching', async () => {
+      this.log.debug('Executing didFinishLaunching callback');
+
+      // if (this.config.token) {
+        await this.discoverDevices();
+      // } else {
+      //   this.log.info(
+      //     'No token available, doing nothing. Hint: Configure the plugin by logging in. Then restart Homebridge to complete plugin activation.'
+      //   );
+      // }
+    });
   }
 
   /**
