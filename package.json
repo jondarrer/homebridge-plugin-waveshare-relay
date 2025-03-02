@@ -7,7 +7,7 @@
   "author": "Jonathan Darrer <jonny@jondarrer.me.uk>",
   "repository": {
     "type": "git",
-    "url": "https:///github.com/jondarrer/rpi-relay-hat-api"
+    "url": "https:///github.com/jondarrer/homebridge-plugin-waveshare-relay"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -50,7 +50,8 @@
     "npm": "please-use-yarn"
   },
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "waveshare"
   ],
   "packageManager": "yarn@4.6.0"
 }
