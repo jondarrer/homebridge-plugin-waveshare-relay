@@ -45,7 +45,7 @@
   },
   "engines": {
     "homebridge": "^1.6.0",
-    "node": ">=22.14 <23",
+    "node": "^18.19.0 || ^20.9.0 || ^22.14.0",
     "npm": "please-use-yarn"
   },
   "keywords": [
