@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "homebridge-plugin-waveshare-relay",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Homebridge plugin exposing Waveshare Raspberry Pi Relay Board as a series of switches",
   "license": "UNLICENSED",
   "author": "Jonathan Darrer <jonny@jondarrer.me.uk>",
