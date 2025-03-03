@@ -50,12 +50,12 @@ export interface IService {
   new (uuid: string, name?: string, subtype?: string): unknown;
   getCharacteristic(characteristic: ICharacteristic): ICharacteristic;
   setCharacteristic(characteristic: ICharacteristic, value: string): ICharacteristic;
-  Switch: string;
+  Lightbulb: ILightbulb;
   AccessoryInformation: string;
 };
 
-export interface ISwitch extends IService {
-  new (name: string, subtype?: string): unknown;
+export interface ILightbulb extends IService {
+  new (name: string, subtype?: string): IService;
 };
 
 export interface ICharacteristic {

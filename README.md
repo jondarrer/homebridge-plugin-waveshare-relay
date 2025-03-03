@@ -43,3 +43,5 @@ This will build the plugin and copy the necessary files to the appropriate place
 It is necessary to re-run this process on changes to the source code.
 
 To stop the container, simply run `docker-compose down`.
+
+<https://www.reddit.com/r/homebridge/comments/vusfib/homebridge_and_npm_node_locations_on_raspberry_pi/?rdt=65185>

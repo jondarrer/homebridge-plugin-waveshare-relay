@@ -1,7 +1,7 @@
-import { ILogger, IPlatformConfig, IAPI, IDynamicPlatformPlugin, IService, ISwitch, ICharacteristic, IPlatformAccessory, ECategories } from './homebridge-types';
+import { ILogger, IPlatformConfig, IAPI, IDynamicPlatformPlugin, IService, ILightbulb, ICharacteristic, IPlatformAccessory, ECategories } from './homebridge-types';
 import { IWaveshareRelay, WaveshareRelayApi } from './services/waveshare-relay-api';
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { WaveshareRelaySwitchAccessory } from './waveshare-relay-switch-accessory';
+import { WaveshareRelayLightbulbAccessory } from './waveshare-relay-lightbulb-accessory';
 
 /**
  * HomebridgePlatform
@@ -111,7 +111,7 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
       this.api.updatePlatformAccessories([existingAccessory]);
 
       // Create the accessory handler for the restored accessory
-      new WaveshareRelaySwitchAccessory(this, existingAccessory);
+      new WaveshareRelayLightbulbAccessory(this, existingAccessory);
     } else {
       // The accessory does not yet exist, so we need to create it
       this.log.info('Adding new relay:', `${relay.id}`);
@@ -125,7 +125,7 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
 
       // Create the accessory handler for the newly create accessory
       // this is imported from `platformAccessory.ts`
-      new WaveshareRelaySwitchAccessory(this, accessory);
+      new WaveshareRelayLightbulbAccessory(this, accessory);
 
       // Link the accessory to your platform
       this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);

@@ -5,7 +5,7 @@ import { WaveshareRelayHomebridgePlatform } from "./waveshare-relay-homebridge-p
 /**
  * Represents the air temperature sensor on the thermostat
  */
-export class WaveshareRelaySwitchAccessory {
+export class WaveshareRelayLightbulbAccessory {
   static TYPE = 'Relay';
 
   service: IService;
@@ -16,6 +16,7 @@ export class WaveshareRelaySwitchAccessory {
    * @param {import('homebridge').PlatformAccessory} accessory
    */
   constructor(private platform: WaveshareRelayHomebridgePlatform, private accessory: IPlatformAccessory) {
+    this.platform.log.info('Begin adding accessory', accessory);
     const context = accessory.context as IWaveshareRelay;
 
     const { Manufacturer, Model, Name, On } = this.platform.Characteristic;
@@ -26,9 +27,9 @@ export class WaveshareRelaySwitchAccessory {
       .setCharacteristic(Manufacturer, 'Waveshare')
       .setCharacteristic(Model, `RPi Relay Board`);
 
-    // get the TemperatureSensor service if it exists, otherwise create a new TemperatureSensor service
+    // get the Lightbulb service
     this.service =
-      this.accessory.getService(this.platform.Service.Switch);
+      new this.platform.Service.Lightbulb(`Lightbulb ${context.id}`);
 
     // set the service name, this is what is displayed as the default name on the Home app
     this.service.setCharacteristic(Name, context.id);
