@@ -11,11 +11,6 @@ export interface IPlatformConfig {
 }
 
 interface IPlatformAccessoryConstructor {
-  /**
-   * Returns a new Gpio object for accessing a GPIO
-   * @param gpio An unsigned integer specifying the GPIO number
-   * @param options (optional)
-   */
   new (displayName: string, uuid: string, category?: ECategories): IPlatformAccessory;
 }
 

@@ -109,10 +109,10 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
       // The accessory already exists
       this.log.info('Restoring existing relay from cache:', existingAccessory.displayName);
 
+      this.api.updatePlatformAccessories([existingAccessory]);
+
       // Create the accessory handler for the restored accessory
       new WaveshareRelayLightbulbAccessory(this, existingAccessory);
-
-      this.api.updatePlatformAccessories([existingAccessory]);
     } else {
       // The accessory does not yet exist, so we need to create it
       this.log.info('Adding new relay:', `${relay.id}`);
