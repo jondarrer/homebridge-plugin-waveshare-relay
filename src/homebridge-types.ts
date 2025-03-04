@@ -25,6 +25,7 @@ export interface IPlatformAccessory {
   context: unknown;
 
   getService: (service: string) => IService;
+  addService: (service: string) => IService;
 }
 
 export interface IAPI {
@@ -50,7 +51,7 @@ export interface IService {
   new (uuid: string, name?: string, subtype?: string): unknown;
   getCharacteristic(characteristic: ICharacteristic): ICharacteristic;
   setCharacteristic(characteristic: ICharacteristic, value: string): ICharacteristic;
-  Lightbulb: ILightbulb;
+  Lightbulb: string;
   AccessoryInformation: string;
 };
 
@@ -83,5 +84,6 @@ export interface IDynamicPlatformPlugin {
  * @group Accessory
  */
 export enum ECategories {
+  LIGHTBULB = 5,
   SWITCH = 8,
 }

@@ -1,26 +1,37 @@
+import { ILogger } from "../homebridge-types";
+
 export class WaveshareRelayApi {
   constructor (private url: string) {}
 
-  setRelay = async (id: string, level: Level): Promise<IWaveshareRelay> => {
-    const result = await fetch(`${this.url}/${id}/${level === 0 ? 'off' : 'on'}`, { method: 'POST' });
-    return result.json() as Promise<IWaveshareRelay>;
-  }
+  setRelay = async (id: string, state: boolean, log: ILogger): Promise<IWaveshareRelay> => {
+    log.debug(`setRelay ${id} ${state}`);
+    const result = await fetch(`${this.url}/${id}/${state ? 'off' : 'on'}`, { method: 'POST' });
+    const json = await result.json() as IWaveshareRelay;
+    log.debug(`setRelay result ${result.status}`, json);
+    return json;
+  };
 
-  getRelay = async (id: string): Promise<IWaveshareRelay> => {
+  getRelay = async (id: string, log: ILogger): Promise<IWaveshareRelay> => {
+    log.debug(`getRelay ${id}`);
     const result = await fetch(`${this.url}/${id}`, { method: 'GET' });
-    return result.json() as Promise<IWaveshareRelay>;
-  }
+    const json = await result.json() as IWaveshareRelay;
+    log.debug(`getRelay result ${result.status}`, json);
+    return json;
+  };
 
-  getRelays = async (): Promise<IWaveshareRelay[]> => {
+  getRelays = async (log: ILogger): Promise<IWaveshareRelay[]> => {
+    log.debug(`getRelays`);
     const result = await fetch(`${this.url}`, { method: 'GET' });
-    return result.json() as Promise<IWaveshareRelay[]>;
-  }
+    const json = await result.json() as IWaveshareRelay[];
+    log.debug(`getRelays result ${result.status}`, json);
+    return json;
+  };
 }
 
-export type Level = 0 | 1;
+export type TState = 0 | 1;
 
 export interface IWaveshareRelay {
   id: string;
-  level: Level;
-  gpio: number;
+  pin: number;
+  state: TState;
 }

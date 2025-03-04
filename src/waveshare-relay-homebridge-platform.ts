@@ -73,7 +73,7 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
    * are not registered again to prevent "duplicate UUID" errors.
    */
   discoverDevices = async () => {
-    const relays = await this.waveshareRelayApi.getRelays();
+    const relays = await this.waveshareRelayApi.getRelays(this.log);
 
     this.log.debug(`Discovered ${relays.length} relay(s).`);
 
@@ -99,7 +99,7 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
 
   updateOrRegisterRelay = (relay: IWaveshareRelay) => {
     const uuid = this.api.hap.uuid.generate(relay.id);
-    this.log.debug(`Processing relay ${relay.id} with gpio ${relay.gpio}.`);
+    this.log.debug(`Processing relay ${relay.id} with pin ${relay.pin}.`);
 
     // See if an accessory with the same uuid has already been registered and restored from
     // the cached devices we stored in the `configureAccessory` method above
@@ -108,16 +108,17 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
     if (existingAccessory) {
       // The accessory already exists
       this.log.info('Restoring existing relay from cache:', existingAccessory.displayName);
-      this.api.updatePlatformAccessories([existingAccessory]);
 
       // Create the accessory handler for the restored accessory
       new WaveshareRelayLightbulbAccessory(this, existingAccessory);
+
+      this.api.updatePlatformAccessories([existingAccessory]);
     } else {
       // The accessory does not yet exist, so we need to create it
       this.log.info('Adding new relay:', `${relay.id}`);
 
-      // Create a new accessory
-      const accessory = new this.api.platformAccessory(relay.id, uuid, this.api.hap.Categories.SWITCH);
+      // Create a new accessory, with displayName set to relay.id
+      const accessory = new this.api.platformAccessory(relay.id, uuid, this.api.hap.Categories.LIGHTBULB);
 
       // Store a copy of the device object in the `accessory.context`
       // the `context` property can be used to store any data about the accessory you may need
