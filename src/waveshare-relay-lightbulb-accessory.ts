@@ -1,5 +1,5 @@
 import { IPlatformAccessory, IService } from "./homebridge-types";
-import { IWaveshareRelay, TState } from "./services/waveshare-relay-api";
+import { IWaveshareRelay, TState, WaveshareRelayApi } from "./services/waveshare-relay-api";
 import { WaveshareRelayHomebridgePlatform } from "./waveshare-relay-homebridge-platform";
 
 /**
@@ -9,6 +9,7 @@ export class WaveshareRelayLightbulbAccessory {
   static TYPE = 'Relay';
 
   service: IService;
+  waveshareRelayApi: WaveshareRelayApi;
 
   /**
    *
@@ -16,16 +17,22 @@ export class WaveshareRelayLightbulbAccessory {
    * @param {import('homebridge').PlatformAccessory} accessory
    */
   constructor(private platform: WaveshareRelayHomebridgePlatform, private accessory: IPlatformAccessory) {
-    this.platform.log.info('Begin adding accessory', accessory);
+    this.platform.log.debug('Begin adding accessory', accessory);
     const context = accessory.context as IWaveshareRelay;
+    const waveshareRelayApi = this.platform.waveshareRelayApis.find(api => api.url === context.url);
+    if (waveshareRelayApi === undefined) {
+      throw new Error(`Unable to find waveshare relay api: ${context.url}`);
+    }
+    this.waveshareRelayApi = waveshareRelayApi;
 
-    const { Manufacturer, Model, Name, On } = this.platform.Characteristic;
+    const { Manufacturer, Model, SerialNumber, Name, On } = this.platform.Characteristic;
 
     // Set accessory information
     this.accessory
       .getService(this.platform.Service.AccessoryInformation)
       .setCharacteristic(Manufacturer, 'Waveshare')
-      .setCharacteristic(Model, `RPi Relay Board`);
+      .setCharacteristic(Model, 'RPi Relay Board')
+      .setCharacteristic(SerialNumber, WaveshareRelayApi.buildRelayGuid(context));
 
     // Get the Lightbulb service
     this.service =
@@ -55,10 +62,10 @@ export class WaveshareRelayLightbulbAccessory {
    * @returns {Promise<import('homebridge').CharacteristicValue>}
    */
   async getState() {
-    const { id } = this.accessory.context as IWaveshareRelay;
+    const { url, id } = this.accessory.context as IWaveshareRelay;
     this.platform.log.debug(`[${id}] begin reading state`);
 
-    const relay = await this.platform.waveshareRelayApi.getRelay(id, this.platform.log);
+    const relay = await this.waveshareRelayApi.getRelay(id, this.platform.log);
     this.accessory.context = relay;
 
     this.platform.log.debug(`[${id}] state read as`, relay.state);
@@ -74,7 +81,7 @@ export class WaveshareRelayLightbulbAccessory {
     const { id } = this.accessory.context as IWaveshareRelay;
     this.platform.log.debug(`[${id}] begin reading state`);
 
-    const relay = await this.platform.waveshareRelayApi.setRelay(id, state, this.platform.log);
+    const relay = await this.waveshareRelayApi.setRelay(id, state, this.platform.log);
     this.accessory.context = relay;
 
     this.platform.log.debug(`[${id}] state read as`, relay.state);

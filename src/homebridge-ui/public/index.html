@@ -1,0 +1,209 @@
+<div class="card card-body">
+  <form id="loginForm" class="">
+    <div class="form-group">
+      Enter your RPi Waveshare Relay API urls (comma separated):
+    </div>
+    <div class="form-group">
+      <label for="urls">Urls</label>
+      <div class="input-group">
+        <span class="input-group-text custom-addon-prepend" id="urls-addon">
+          <!-- https://icons.getbootstrap.com/icons/server/ -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hdd-network" viewBox="0 0 16 16">
+            <path d="M4.5 5a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1M3 4.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2H8.5v3a1.5 1.5 0 0 1 1.5 1.5h5.5a.5.5 0 0 1 0 1H10A1.5 1.5 0 0 1 8.5 14h-1A1.5 1.5 0 0 1 6 12.5H.5a.5.5 0 0 1 0-1H6A1.5 1.5 0 0 1 7.5 10V7H2a2 2 0 0 1-2-2zm1 0v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1m6 7.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5"/>
+          </svg>
+        </span>
+        <input type="text" class="form-control" id="urls" aria-describedby="urls-addon" required />
+        <button id="saveButton" type="button" class="btn btn-primary custom-addon-append">Save</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <ul id="associated-relays" class="list-unstyled">
+
+      </ul>
+    </div>
+    <div id="relay-template" class="d-none">
+      <li>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggles" viewBox="0 0 16 16">
+          <path d="M4.5 9a3.5 3.5 0 1 0 0 7h7a3.5 3.5 0 1 0 0-7zm7 6a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5m-7-14a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5m2.45 0A3.5 3.5 0 0 1 8 3.5 3.5 3.5 0 0 1 6.95 6h4.55a2.5 2.5 0 0 0 0-5zM4.5 0h7a3.5 3.5 0 1 1 0 7h-7a3.5 3.5 0 1 1 0-7"/>
+        </svg>
+        <span>{RELAY_DETAILS}</span>
+      </li>
+    </div>
+  </form>
+</div>
+<style>
+  .custom-addon-prepend {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .custom-addon-append {
+    font-size: initial;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  #saveButton span {
+    vertical-align: middle;
+  }
+
+  #userProfile {
+    font-weight: 700;
+  }
+</style>
+
+<script>
+/**
+ *
+ * @param {window.Document} document
+ * @param {HomebridgePluginUi} homebridge
+ */
+const configUI = async (document, homebridge) => {
+  console.log('configUI');
+
+  // get the initial config - this is an array potentially containing multiple config blocks
+  const pluginConfig = await homebridge.getPluginConfig();
+
+  initialiseForm(document, homebridge, pluginConfig);
+
+  // watch for click events on the saveButton
+  document
+    .getElementById('saveButton')
+    .addEventListener('click', () => handleSaveClick(document, homebridge, pluginConfig));
+};
+
+/**
+ *
+ * @param {window.Document} document
+ * @param {HomebridgePluginUi} homebridge
+ * @param {Array<any>} pluginConfig
+ */
+const initialiseForm = (document, homebridge, pluginConfig) => {
+  console.log('initialiseForm', pluginConfig);
+  // Get details of servers, if any
+  if (pluginConfig.length && pluginConfig[0].waveshareUrls) {
+    console.log('initialiseForm', 'Found waveshareUrls, getting server details');
+
+    document.getElementById('urls').value = pluginConfig[0].waveshareUrls;
+
+    getServerDetails(document, homebridge, pluginConfig);
+  } else {
+    console.log('initialiseForm', 'No waveshareUrls found');
+    if (pluginConfig.length === 0) {
+      console.log('HEERRREEE', pluginConfig.push.mock);
+      pluginConfig.push({ name: 'HomebridgePluginWaveshareRelay' });
+    }
+  }
+};
+
+/**
+ *
+ * @param {window.Document} document
+ * @param {HomebridgePluginUi} homebridge
+ * @param {Array<any>} pluginConfig
+ */
+const handleSaveClick = async (document, homebridge, pluginConfig) => {
+  // validate a username was provided
+  const waveshareUrls = document.getElementById('urls').value.split(',');
+
+  if (!waveshareUrls) {
+    // create a error / red toast notification if the required input is not provided.
+    homebridge.toast.error('Waveshare server urls must be provided.', 'Error');
+    return;
+  }
+
+  // starting the request, show the loading spinner
+  homebridge.showSpinner();
+
+  // request Waveshare server details from the server
+  try {
+    const response = await homebridge.request('/server-details', {
+      urls: waveshareUrls,
+    });
+    // console.log({response});
+
+    if (!response) {
+      throw new Error('No response');
+    }
+
+    if (response.error) {
+      throw new Error(response.error);
+    }
+
+    displayServerRelays(response);
+
+    // update the plugin config
+    pluginConfig[0].waveshareUrls = waveshareUrls;
+    await homebridge.updatePluginConfig(pluginConfig);
+
+    // show a success toast notification
+    homebridge.toast.success('Saved', 'Success');
+  } catch (e) {
+    console.error(e);
+    homebridge.toast.error(e.error, e.message);
+  } finally {
+    // remember to hide the spinner
+    homebridge.hideSpinner();
+  }
+};
+
+const displayServerRelays = (servers) => {
+
+  const associatedRelays = document.getElementById('associated-relays');
+  const itemTemplate = document.getElementById('relay-template').innerHTML; // .replace('{RELAY_DETAILS}', 'CH1')
+  const parser = new DOMParser();
+
+  for (let server of servers) {
+    for (let relay of server.relays) {
+      itemDetails = itemTemplate.replace('{RELAY_DETAILS}', `${relay.name || 'Unnamed'} (channel ${relay.id}, pin ${relay.pin})`);
+      childItem = parser.parseFromString(itemDetails, 'text/html').body.firstChild;
+      associatedRelays.appendChild(childItem);
+    }
+  }
+}
+
+/**
+ * Gets the logged in user's profile from Warmup
+ * @param {window.Document} document
+ * @param {HomebridgePluginUi} homebridge
+ * @param {Array<any>} pluginConfig
+ */
+const getServerDetails = async (document, homebridge, pluginConfig) => {
+  console.log('getServerDetails', 'Getting Waveshare Relay server details');
+
+  try {
+    const response = await homebridge.request('/server-details', {
+      urls: pluginConfig[0].waveshareUrls,
+    });
+    console.log('getServerDetails', { response });
+    if (response) {
+      const result = response;
+      // document.getElementById('userProfile').innerHTML = `${firstName} ${lastName}, ${email}`;
+      // document.getElementById('loginInfoLoadingIndicator').classList.add('d-none');
+      // document.getElementById('loginInfo').classList.remove('d-none');
+
+      displayServerRelays(result);
+    }
+  } catch(e) {
+    console.error(e);
+    homebridge.toast.error(e.error, e.message);
+  }
+}
+
+(async () => {
+
+// Check for CommonJS environment (like Node.js)
+if (typeof window !== 'undefined' && window.document) {
+  // Browser environment
+
+  // Ensure we have homebridge too
+  if (typeof window.homebridge !== 'undefined') {
+    await configUI(window.document, window.homebridge);
+  }
+} else {
+  // Fallback for unknown environments
+  console.error('Unsupported environment: No support for commonjs or window');
+}
+})();
+</script>

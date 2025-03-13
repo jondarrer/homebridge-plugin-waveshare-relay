@@ -63,6 +63,7 @@ export interface ICharacteristic {
   On: ICharacteristic;
   Manufacturer: ICharacteristic;
   Model: ICharacteristic;
+  SerialNumber: ICharacteristic;
   Name: ICharacteristic;
   Formats: Record<string, unknown>;
   Units: Record<string, unknown>;

@@ -1,0 +1,17 @@
+{
+  "pluginAlias": "HomebridgePluginWaveshareRelay",
+  "pluginType": "platform",
+  "singular": true,
+  "customUi": true,
+  "customUiPath": "./dist/homebridge-ui",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "urls": {
+        "title": "Waveshare Urls",
+        "type": "string",
+        "required": true
+      }
+    }
+  }
+}
