@@ -11,8 +11,10 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc && yarn copy-non-ts-files",
-    "copy-non-ts-files": "copyfiles -u 1 src/**/**/*.html dist/",
     "containerised-homebridge": "yarn build && ./scripts/init.sh && docker-compose up --build --detach",
+    "copy-non-ts-files": "copyfiles -u 1 src/**/**/*.html dist/",
+    "lint-staged": "lint-staged",
+    "prepare": "husky",
     "test": "node --import tsx --test --experimental-test-module-mocks \"src/**/*.spec.ts\""
   },
   "dependencies": {
@@ -48,14 +50,25 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
+  "keywords": [
+    "homebridge-plugin",
+    "waveshare"
+  ],
   "engines": {
     "homebridge": "^1.6.0",
     "node": "^18.19.0 || ^20.9.0 || ^22.14.0",
     "npm": "please-use-yarn"
   },
-  "keywords": [
-    "homebridge-plugin",
-    "waveshare"
-  ],
+  "lint-staged": {
+    "**/package.json": [
+      "prettier-package-json --write",
+      "git add"
+    ],
+    "src/**/*.js": [
+      "eslint --fix --quiet",
+      "prettier --single-quote --trailing-comma es5 --write",
+      "git add"
+    ]
+  },
   "packageManager": "yarn@4.6.0"
 }
