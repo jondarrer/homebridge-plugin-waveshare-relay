@@ -66,7 +66,7 @@ describe('Save urls', () => {
     // Assert
     assert.equal(glob.homebridge.getPluginConfig.mock.calls.length, 1);
     assert.equal(pluginConfig.push.mock.calls.length, 1);
-    assert.deepEqual(pluginConfig.push.mock.calls[0].arguments, [{ name: 'WaveshareRelay' }]);
+    assert.deepEqual(pluginConfig.push.mock.calls[0].arguments, [{ name: 'HomebridgePluginWaveshareRelay' }]);
   });
 
   // it('should validate the email field', async () => {
