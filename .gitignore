@@ -130,4 +130,5 @@ dist
 .pnp.*
 
 # homebridge docker instance
-volumes
+volumes/*
+!volumes/config.json

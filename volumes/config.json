@@ -1,0 +1,22 @@
+{
+  "platforms": [
+    {
+      "platform": "config",
+      "name": "Config",
+      "port": 8581
+    },
+    {
+      "name": "HomebridgePluginWaveshareRelay",
+      "waveshareUrls": ["http://rpiz2w-2"],
+      "platform": "HomebridgePluginWaveshareRelay"
+    }
+  ],
+  "bridge": {
+    "name": "Homebridge",
+    "username": "CC:22:3D:E3:CE:30",
+    "manufacturer": "homebridge.io",
+    "model": "homebridge",
+    "port": 51826,
+    "pin": "031-45-154"
+  }
+}

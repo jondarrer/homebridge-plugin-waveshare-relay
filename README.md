@@ -2,6 +2,22 @@
 
 Homebridge plugin exposing Waveshare Raspberry Pi Relay Board as a series of switches.
 
+## Using the plugin
+
+You will need one or more Raspberry Pis with the Waveshare Relay board running [rpi-relay-hat-api](https://github.com/jondarrer/rpi-relay-hat-api). All the relays are retrieved from the boards, and are automatically created in the Home App.
+
+You will also need a server running [Homebridge](https://homebridge.io).
+
+### Installation
+
+Install the plugin by searching for "Waveshare Relay Homebridge Plugin" through the Homebridge Plugins UI or manually by:
+
+```sh
+sudo npm -g i homebridge-plugin-waveshare-relay
+```
+
+Use the plugin Config UI X to specify all the board urls and all the associated individual relays will be added to Homebridge.
+
 ## Developing
 
 ### Clone and install dependencies

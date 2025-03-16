@@ -12,6 +12,7 @@
   "scripts": {
     "build": "tsc && yarn copy-non-ts-files",
     "containerised-homebridge": "yarn build && ./scripts/init.sh && docker-compose up --build --detach",
+    "containerised-homebridge-beta-2.0.0": "yarn build && ./scripts/init-beta-2.0.0.sh && docker-compose --file docker-compose-beta-2.0.0.yml up --build --detach",
     "copy-non-ts-files": "copyfiles -u 1 src/**/**/*.html dist/",
     "lint-staged": "lint-staged",
     "prepare": "husky",
@@ -55,7 +56,7 @@
     "waveshare"
   ],
   "engines": {
-    "homebridge": "^1.6.0",
+    "homebridge": "^1.9.0 || ^2.0.0",
     "node": "^18.19.0 || ^20.9.0 || ^22.14.0",
     "npm": "please-use-yarn"
   },

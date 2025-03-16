@@ -4,7 +4,7 @@ export class WaveshareRelayApi {
   constructor (public url: string) {}
 
   setRelay = async (id: string, state: boolean, log: ILogger): Promise<IWaveshareRelay> => {
-    log.debug(`setRelay ${id} ${state}`);
+    log.debug(`setRelay ${this.url}#${id} ${state}`);
     const result = await fetch(`${this.url}/${id}/${state ? 'on' : 'off'}`, { method: 'POST' });
     const json = await result.json() as IWaveshareRelay;
     json.url = this.url;
@@ -13,7 +13,7 @@ export class WaveshareRelayApi {
   };
 
   getRelay = async (id: string, log: ILogger): Promise<IWaveshareRelay> => {
-    log.debug(`getRelay ${id}`);
+    log.debug(`getRelay ${this.url}#${id}`);
     const result = await fetch(`${this.url}/${id}`, { method: 'GET' });
     const json = await result.json() as IWaveshareRelay;
     json.url = this.url;
