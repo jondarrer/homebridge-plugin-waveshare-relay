@@ -91,7 +91,6 @@ const initialiseForm = (document, homebridge, pluginConfig) => {
   } else {
     console.log('initialiseForm', 'No waveshareUrls found');
     if (pluginConfig.length === 0) {
-      console.log('HEERRREEE', pluginConfig.push.mock);
       pluginConfig.push({ name: 'HomebridgePluginWaveshareRelay' });
     }
   }

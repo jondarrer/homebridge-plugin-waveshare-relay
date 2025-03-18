@@ -81,12 +81,12 @@ export class WaveshareRelayLightbulbAccessory {
   async setState(state: boolean) {
     const cachedRelay = this.accessory.context as IWaveshareRelay;
     const relayGuid = WaveshareRelayApi.buildRelayGuid(cachedRelay);
-    this.platform.log.debug(`[${relayGuid}] begin reading state`);
+    this.platform.log.debug(`[${relayGuid}] begin setting state`);
 
-    const relay = await this.waveshareRelayApi.setRelay(relayGuid, state, this.platform.log);
+    const relay = await this.waveshareRelayApi.setRelay(cachedRelay.id, state, this.platform.log);
     this.accessory.context = relay;
 
-    this.platform.log.debug(`[${relayGuid}] state read as`, relay.state);
+    this.platform.log.debug(`[${relayGuid}] state set as`, relay.state);
 
     return relay.state === 1;
   }
