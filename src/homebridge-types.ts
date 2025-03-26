@@ -10,9 +10,11 @@ export interface IPlatformConfig {
   [key: string]: unknown;
 }
 
-interface IPlatformAccessoryConstructor {
-  new (displayName: string, uuid: string, category?: ECategories): IPlatformAccessory;
-}
+type IPlatformAccessoryConstructor = new (
+  displayName: string,
+  uuid: string,
+  category?: ECategories
+) => IPlatformAccessory;
 
 export interface IPlatformAccessory {
   displayName: string;
@@ -24,8 +26,7 @@ export interface IPlatformAccessory {
 }
 
 export interface IAPI {
-  on(event: 'didFinishLaunching', listener: () => void): this;
-  on(event: 'shutdown', listener: () => void): this;
+  on(event: 'didFinishLaunching' | 'shutdown', listener: () => void): this;
   registerPlatform(platformName: string, constructor: unknown): void;
   updatePlatformAccessories(accessories: IPlatformAccessory[]): void;
   registerPlatformAccessories(plaformName: string, pluginName: string, accessories: IPlatformAccessory[]): void;
@@ -36,8 +37,8 @@ export interface IAPI {
     Characteristic: ICharacteristic;
     Categories: typeof ECategories;
     uuid: {
-      generate: (id: string) => ''
-    }
+      generate: (id: string) => '';
+    };
     [key: string]: unknown;
   };
 }
@@ -48,16 +49,16 @@ export interface IService {
   setCharacteristic(characteristic: ICharacteristic, value: string): ICharacteristic;
   Lightbulb: string;
   AccessoryInformation: string;
-};
+}
 
 export interface ILightbulb extends IService {
   new (name: string, subtype?: string): IService;
-};
+}
 
 export interface ICharacteristic {
   new (uuid: string): unknown;
-  onGet(handler: Function): ICharacteristic;
-  onSet(handler: Function): ICharacteristic;
+  onGet(handler: () => void): ICharacteristic;
+  onSet(handler: (value: unknown) => unknown): ICharacteristic;
   setCharacteristic(characteristic: ICharacteristic, value: string): ICharacteristic;
   updateValue(value: unknown): ICharacteristic;
   On: ICharacteristic;
@@ -68,7 +69,7 @@ export interface ICharacteristic {
   Formats: Record<string, unknown>;
   Units: Record<string, unknown>;
   Perms: Record<string, unknown>;
-};
+}
 
 export interface IDynamicPlatformPlugin {
   configureAccessory(accessory: unknown): void;

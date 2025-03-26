@@ -1,4 +1,12 @@
-import { ILogger, IPlatformConfig, IAPI, IDynamicPlatformPlugin, IService, ILightbulb, ICharacteristic, IPlatformAccessory, ECategories } from './homebridge-types';
+import {
+  ILogger,
+  IPlatformConfig,
+  IAPI,
+  IDynamicPlatformPlugin,
+  IService,
+  ICharacteristic,
+  IPlatformAccessory,
+} from './homebridge-types';
 import { IWaveshareRelay, WaveshareRelayApi } from './services/waveshare-relay-api';
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 import { WaveshareRelayLightbulbAccessory } from './waveshare-relay-lightbulb-accessory';
@@ -22,7 +30,11 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
    * @param config
    * @param api
    */
-  constructor(public log: ILogger, public config: IPlatformConfig, public api: IAPI) {
+  constructor(
+    public log: ILogger,
+    public config: IPlatformConfig,
+    public api: IAPI
+  ) {
     this.log.debug('Begin initializing platform:', this.config.name);
     this.Service = this.api.hap.Service;
     this.Characteristic = this.api.hap.Characteristic;
@@ -39,7 +51,9 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
       this.log.debug('Executing didFinishLaunching callback');
 
       if (this.config.waveshareUrls) {
-        this.waveshareRelayApis = (this.config.waveshareUrls as string[]).map((waveshareUrl) => new WaveshareRelayApi(waveshareUrl));
+        this.waveshareRelayApis = (this.config.waveshareUrls as string[]).map(
+          (waveshareUrl) => new WaveshareRelayApi(waveshareUrl)
+        );
         try {
           await this.discoverDevices();
         } catch (error) {
@@ -73,7 +87,10 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
    */
   discoverDevices = async () => {
     const logger = this.log;
-    const relays = await flatMapAsync<WaveshareRelayApi, IWaveshareRelay>(this.waveshareRelayApis, async (waveshareRelayApi) => await waveshareRelayApi.getRelays(logger));
+    const relays = await flatMapAsync<WaveshareRelayApi, IWaveshareRelay>(
+      this.waveshareRelayApis,
+      async (waveshareRelayApi) => await waveshareRelayApi.getRelays(logger)
+    );
 
     this.log.debug(`Discovered ${relays.length} relay(s).`);
 
@@ -84,9 +101,14 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
     }
 
     // Unregister any accessories that we no longer have
-    for (let i = 0; i < this.accessories.length; i++) {
-      const existingAccessory = this.accessories[i];
-      if (!relays.find(relay => WaveshareRelayApi.buildRelayGuid(relay) === WaveshareRelayApi.buildRelayGuid(existingAccessory.context as IWaveshareRelay))) {
+    for (const existingAccessory of this.accessories) {
+      if (
+        !relays.find(
+          (relay) =>
+            WaveshareRelayApi.buildRelayGuid(relay) ===
+            WaveshareRelayApi.buildRelayGuid(existingAccessory.context as IWaveshareRelay)
+        )
+      ) {
         // the accessory no longer exists
         this.log.info('Removing unavailable accessory from the cache:', existingAccessory.displayName);
 
@@ -134,5 +156,5 @@ export class WaveshareRelayHomebridgePlatform implements IDynamicPlatformPlugin 
   };
 }
 
-const flatMapAsync = async<T, U>(arr: T[], fn: (item: T) => Promise<U[]>): Promise<U[]> =>
+const flatMapAsync = async <T, U>(arr: T[], fn: (item: T) => Promise<U[]>): Promise<U[]> =>
   (await Promise.all(arr.map(fn))).flat();

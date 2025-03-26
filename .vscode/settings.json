@@ -3,8 +3,32 @@
     "**/.yarn": true,
     "**/.pnp.*": true
   },
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "prettier.requireConfig": true,
+  "editor.tabSize": 2,
+  "eslint.enable": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "eslint.nodePath": ".yarn/sdks",
   "prettier.prettierPath": ".yarn/sdks/prettier/index.cjs",
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "nodejs-testing.extensions": [
+    {
+      "extensions": ["ts"],
+      "parameters": ["--import", "tsx", "--disable-warning", "ExperimentalWarning", "--experimental-test-module-mocks"]
+    }
+  ],
+  "files.associations": {
+    "docker-compose-beta-2.0.0.yml": "dockercompose",
+    "Dockerfile-beta-2.0.0": "dockerfile",
+  }
 }

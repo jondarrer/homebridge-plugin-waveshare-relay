@@ -16,7 +16,21 @@ Install the plugin by searching for "Waveshare Relay Homebridge Plugin" through 
 sudo npm -g i homebridge-plugin-waveshare-relay
 ```
 
-Use the plugin Config UI X to specify all the board urls and all the associated individual relays will be added to Homebridge.
+Use the plugin Config UI X to specify all the board urls and all the associated individual relays will be added to Homebridge:
+
+### Configure the plugin with your Waveshare relays
+
+![Configure Waveshare Urls](./docs/images/config-screen-single-waveshare.png)
+
+### Usage
+
+Room View with Waveshare Relays | Waveshare Relay Main View
+| :---------------------: | :-------------------: |
+![Room with Waveshare Relays](./docs/images/home-app-room-with-waveshare-relays.png) | ![Waveshare Relay Main View](./docs/images/home-app-relay-lightbulb-main-view.png)
+
+## Relay Control
+
+Each relay on the board appears as a lightbulb in the Home app, and the relay can be turned on and off as if it were a lightbulb.
 
 ## Developing
 
