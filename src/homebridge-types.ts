@@ -57,8 +57,8 @@ export interface ILightbulb extends IService {
 
 export interface ICharacteristic {
   new (uuid: string): unknown;
-  onGet(handler: () => void): ICharacteristic;
-  onSet(handler: (value: unknown) => unknown): ICharacteristic;
+  onGet(handler: () => Promise<boolean>): ICharacteristic;
+  onSet(handler: (value: boolean) => Promise<void>): ICharacteristic;
   setCharacteristic(characteristic: ICharacteristic, value: string): ICharacteristic;
   updateValue(value: unknown): ICharacteristic;
   On: ICharacteristic;
