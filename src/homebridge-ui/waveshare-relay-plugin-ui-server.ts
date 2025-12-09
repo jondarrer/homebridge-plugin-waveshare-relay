@@ -1,6 +1,6 @@
 import { HomebridgePluginUiServer, RequestError } from '@homebridge/plugin-ui-utils';
 
-import { WaveshareRelayApi } from '../services/waveshare-relay-api';
+import { WaveshareRelayApi } from '../services/waveshare-relay-api.js';
 
 class WaveshareRelayPluginUiServer extends HomebridgePluginUiServer {
   constructor() {
@@ -18,7 +18,7 @@ class WaveshareRelayPluginUiServer extends HomebridgePluginUiServer {
     const results = [];
     try {
       // Get relay details from each server
-      for await (let url of urls) {
+      for await (const url of urls) {
         const api = new WaveshareRelayApi(url);
         const relays = await api.getRelays(console);
         results.push({ url, relays });
