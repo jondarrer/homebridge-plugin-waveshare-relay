@@ -1,6 +1,6 @@
-import { IPlatformAccessory, IService } from './homebridge-types';
-import { IWaveshareRelay, WaveshareRelayApi } from './services/waveshare-relay-api';
-import { WaveshareRelayHomebridgePlatform } from './waveshare-relay-homebridge-platform';
+import { IPlatformAccessory, IService } from './homebridge-types.js';
+import { IWaveshareRelay, WaveshareRelayApi } from './services/waveshare-relay-api.js';
+import { WaveshareRelayHomebridgePlatform } from './waveshare-relay-homebridge-platform.js';
 
 /**
  * Represents the air temperature sensor on the thermostat

@@ -6,10 +6,10 @@ import {
   IService,
   ICharacteristic,
   IPlatformAccessory,
-} from './homebridge-types';
-import { IWaveshareRelay, WaveshareRelayApi } from './services/waveshare-relay-api';
-import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
-import { WaveshareRelayLightbulbAccessory } from './waveshare-relay-lightbulb-accessory';
+} from './homebridge-types.js';
+import { IWaveshareRelay, WaveshareRelayApi } from './services/waveshare-relay-api.js';
+import { PLATFORM_NAME, PLUGIN_NAME } from './settings.js';
+import { WaveshareRelayLightbulbAccessory } from './waveshare-relay-lightbulb-accessory.js';
 
 /**
  * HomebridgePlatform

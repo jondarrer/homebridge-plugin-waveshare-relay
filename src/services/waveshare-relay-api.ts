@@ -1,4 +1,4 @@
-import { ILogger } from '../homebridge-types';
+import { ILogger } from '../homebridge-types.js';
 
 export class WaveshareRelayApi {
   constructor(public url: string) {}
